@@ -6,7 +6,7 @@ load_dotenv()
 class Config:
     # Database
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-key-123')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///focusai.db')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///focusai.sql')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # API Keys

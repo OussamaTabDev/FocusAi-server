@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 
 from flask import Blueprint, request, jsonify
-from config_manager import (
+from config_manager import ( # type: ignore
     load_process_map,
     add_or_update_mapping,
     get_all_categories,
@@ -21,7 +21,7 @@ from config_manager import (
     add_prefix,
     remove_prefix,
     get_all_urls
-)
+) 
 from app.api.Activitiy import config_manger_bp
 bp = config_manger_bp
 

@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 from flask import jsonify, request, send_file
 from app.api.Activitiy import utils_bp
 import psutil, win32gui, win32process, win32con
-from config_manager import PROCESS_NAME_MAP
+from config_manager import PROCESS_NAME_MAP # type: ignore
 
 @utils_bp.route("/process-map", methods=["GET"])
 def process_map():

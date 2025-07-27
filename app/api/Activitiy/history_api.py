@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 from flask import Blueprint, request, jsonify
 from app.api.Activitiy.tracker_api import _tracker              # reuse same tracker instance
 from datetime import datetime
-from app.api.Activitiy import history_bp
+from app.api.Activitiy import history_bp 
 
 
 bp = history_bp

@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 
 from flask import jsonify, request, send_file
 from app.api.Activitiy import productivy_bp
-from productivity_tracker import ProductivityTracker , ProductivityCategory
+from productivity_tracker import ProductivityTracker , ProductivityCategory # type: ignore
 
 _tracker = ProductivityTracker(ai_provider=None)
 

@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 
 from flask import jsonify, request, send_file
 from app.api.Activitiy import tracker_bp                    # already created in __init__.py
-from tracker import WindowTracker                 # lives in core/
+from tracker import WindowTracker                 # type: ignore
 import threading
 
 _tracker = WindowTracker(interval=1, session_gap_seconds=30)
@@ -71,3 +71,15 @@ def screenshot():
     os.close(fd)
     img.save(tmp, "PNG")
     return send_file(tmp, as_attachment=True, download_name="screenshot.png")
+
+@tracker_bp.route("/interval" , methods=["POST"])
+def set_interval():
+    body = request.get_json(silent=True)
+    print("body: " , body)
+    if not body or "interval" not in body:
+        return jsonify({"error": "JSON body must contain 'interval'"}), 400
+    
+    _tracker.interval = int(body["interval"])
+    ok = _tracker.interval == int(body["interval"])
+    return (jsonify({"message": "modified"}), 201) if ok else (jsonify({"error": "exists"}), 409)
+    
