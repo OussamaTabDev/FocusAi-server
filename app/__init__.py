@@ -9,7 +9,7 @@ from app.core.extensions import db , migrate , cors
 # Sub Routes (apps)
 from app.api.Widgets import widgets_bp
 from app.api.Activitiy import tracker_bp , utils_bp , productivy_bp , analytics_bp , config_manger_bp , history_bp
-
+from app.api.Extension import extension_tracker_bp
 
 
 def create_app():
@@ -32,6 +32,9 @@ def create_app():
     app.register_blueprint(analytics_bp)
     app.register_blueprint(history_bp)
     
+    
+    # Extenion
+    app.register_blueprint(extension_tracker_bp)
     # app.disableHardwareAcceleration();
 
 
