@@ -1,0 +1,20 @@
+"""
+Configuration constants for activity tracking routes.
+"""
+
+# Request limits and defaults
+DEFAULT_INTERVAL = 5
+MAX_HISTORY_LIMIT = 1000
+MAX_TOP_WINDOWS_LIMIT = 20
+DEFAULT_HISTORY_LIMIT = 50
+DEFAULT_TOP_WINDOWS_LIMIT = 5
+
+# Thread timeouts
+THREAD_JOIN_TIMEOUT = 5
+
+# HTTP status codes
+HTTP_OK = 200
+HTTP_CREATED = 201
+HTTP_BAD_REQUEST = 400
+HTTP_NOT_FOUND = 404
+HTTP_INTERNAL_SERVER_ERROR = 500
