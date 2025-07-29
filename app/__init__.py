@@ -8,7 +8,8 @@ from app.core.extensions import db , migrate , cors
 
 # Sub Routes (apps)
 from app.api.Widgets import widgets_bp
-from app.api.Activitiy import tracker_bp , utils_bp , productivy_bp , analytics_bp , config_manger_bp , history_bp
+from app.api.Activitiy import tracker_bp , utils_bp , productivy_bp , analytics_bp , config_manger_bp , history_bp , cupturer_bp , device_controller_bp
+from app.api.ModeController import mode_controller_bp
 from app.api.Extension import extension_tracker_bp
 
 
@@ -31,6 +32,11 @@ def create_app():
     app.register_blueprint(config_manger_bp)
     app.register_blueprint(analytics_bp)
     app.register_blueprint(history_bp)
+    app.register_blueprint(cupturer_bp)
+    app.register_blueprint(device_controller_bp)
+    
+    #ModesController
+    app.register_blueprint(mode_controller_bp)
     
     
     # Extenion
