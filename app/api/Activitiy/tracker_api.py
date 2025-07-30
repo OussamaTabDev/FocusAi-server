@@ -253,43 +253,9 @@ def get_shutdown_status():
         }), 500
 
 
-@tracker_bp.route("/stop", methods=["POST"])
-def stop_tracking():
-    """
-    Stops only the tracking without full shutdown.
-    Components remain initialized for quick restart.
-    """
-    try:
-        _tracker.stop()
-        return jsonify({
-            "message": "Window tracking stopped",
-            "status": "success",
-            "is_tracking": _tracker.is_tracking
-        }), 200
-    except Exception as e:
-        return jsonify({
-            "error": f"Failed to stop tracking: {str(e)}",
-            "status": "error"
-        }), 500
 
 
-@tracker_bp.route("/start", methods=["POST"])
-def start_tracking():
-    """
-    Starts the window tracking.
-    """
-    try:
-        _tracker.start()
-        return jsonify({
-            "message": "Window tracking started",
-            "status": "success",
-            "is_tracking": _tracker.is_tracking
-        }), 200
-    except Exception as e:
-        return jsonify({
-            "error": f"Failed to start tracking: {str(e)}",
-            "status": "error"
-        }), 500
+
 
 
 @tracker_bp.route("/force-stop", methods=["POST"])

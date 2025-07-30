@@ -29,7 +29,7 @@ def track_url():
     """Receive URL data from browser extension"""
     try:
         url_data = request.get_json()
-        
+        print(f"Received URL data: {url_data}")
         if not url_data or 'url' not in url_data:
             return jsonify({'error': 'Invalid data'}), 400
         
@@ -39,9 +39,9 @@ def track_url():
         
         # Save to both JSON and CSV
         json_success = tracker.save_url(url_data)
-        csv_success = tracker.save_to_csv(url_data)
+        # csv_success = tracker.save_to_csv(url_data)
         
-        if json_success or csv_success:
+        if json_success :
             print(f"Tracked URL: {url_data['url']}")
             return jsonify({
                 'status': 'success',
