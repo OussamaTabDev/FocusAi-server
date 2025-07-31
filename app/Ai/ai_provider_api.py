@@ -7,9 +7,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "core" / "Providers"))
 
 from flask import Blueprint, request, jsonify
-from ai_provider import AIProviderManager, ProviderType
+from InitAIProvider import AIProviderManager, ProviderType # type: ignore
+from app.Ai import ai_provider_bp
 
-bp = Blueprint("ai", __name__, url_prefix="/api/ai")
+bp = ai_provider_bp
 
 _manager = AIProviderManager()
 
@@ -32,7 +33,7 @@ def init_provider():
     retries = body.get("max_retries", 3)
     timeout = body.get("timeout", 30)
 
-    from ai_provider import ProviderConfig
+    from ai_provider import ProviderConfig  #type: ignore
     cfg = ProviderConfig(
         provider_type=pt,
         api_key=key,

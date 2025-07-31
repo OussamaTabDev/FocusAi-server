@@ -1,31 +1,45 @@
+import os
+import sys
+from pathlib import Path
 from flask import Flask
 from app.core.config import Config
 from app.core.extensions import db , migrate , cors
 
 
-
-
-
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Core"))
+from database.config import DatabaseConfig #type: ignore
+from database.migrations import DatabaseMigration #type: ignore
 # Sub Routes (apps)
 from app.api.Widgets import widgets_bp
 from app.api.Activitiy import tracker_bp , utils_bp , productivy_bp , analytics_bp , config_manger_bp , history_bp , cupturer_bp , device_controller_bp
 from app.api.ModeController import mode_controller_bp
 from app.api.Extension import extension_tracker_bp
-
+from app.Ai import ai_provider_bp
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Initialize extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
+    # Configure database
+    environment = os.getenv('FLASK_ENV', 'development')
+    database_url = DatabaseConfig.get_database_url(environment)
+    
+    try:
+        migration = DatabaseMigration(database_url)
+        migration.initialize_database()
+        app.logger.info(f"Database initialized: {database_url}")
+    except Exception as e:
+        app.logger.error(f"Database initialization failed: {e}")
+    
+    # Add database info to app config
+    app.config['DATABASE_URL'] = database_url
+    app.config['DATABASE_ENVIRONMENT'] = environment
     
     # Enable CORS for Electron frontend
     from flask_cors import CORS
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:8082"}})
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:8080"}})
     
-    
+    # Tracker API
     app.register_blueprint(widgets_bp)
     app.register_blueprint(tracker_bp)
     app.register_blueprint(utils_bp)
@@ -36,11 +50,13 @@ def create_app():
     app.register_blueprint(cupturer_bp)
     app.register_blueprint(device_controller_bp)
     
-    #ModesController
+    # Modes Controller API
     app.register_blueprint(mode_controller_bp)
     
-    
-    # Extenion
+    # AI Provider API
+    app.register_blueprint(ai_provider_bp)
+    # Extension Tracker API
+   
     app.register_blueprint(extension_tracker_bp)
     # app.disableHardwareAcceleration();
 

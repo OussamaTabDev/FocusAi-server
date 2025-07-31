@@ -4,7 +4,7 @@ REST wrapper for core.ImageCapturer
 """
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "core"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "core" / "layers"))
 
 from flask import Blueprint, request, jsonify, send_file
 # from ImageCapturer import ImageCapturer

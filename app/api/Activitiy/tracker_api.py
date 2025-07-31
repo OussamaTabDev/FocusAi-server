@@ -2,6 +2,7 @@
 server/app/api/tracker_api.py
 Routes for tracker_bp
 """
+import os
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
@@ -9,9 +10,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 from flask import jsonify, request, send_file
 from app.api.Activitiy import tracker_bp                    # already created in __init__.py
 from tracker import WindowTracker                 # type: ignore
+from database.config import DatabaseConfig # type: ignore
 import threading
+# Initialize database configuration based on environment
+environment = os.getenv('FLASK_ENV', 'development')
+database_url = DatabaseConfig.get_database_url(environment)
 
-_tracker = WindowTracker(interval=1, session_gap_seconds=30)
+_tracker = WindowTracker(interval=1, session_gap_seconds=30 , database_url=database_url)
 
 def _ensure_tracker_started():
     if not _tracker.is_tracking:
@@ -36,7 +41,9 @@ def stop():
 
 @tracker_bp.route("/current", methods=["GET"])
 def current():
+    # print("Getting current window info --------------------------------------------")
     info = _tracker.get_current_window()
+    # print(f"Current window info: {info}-------------------------------------------")
     return jsonify(info.__dict__) if info else ("", 404)
 
 @tracker_bp.route("/history", methods=["GET"])

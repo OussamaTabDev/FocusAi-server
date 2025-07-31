@@ -52,16 +52,17 @@ def standard_normal():
     ok = _controller.switch_to_standard_normal()
     return jsonify({"success": ok})
 
-@bp.route("/focus/<focus_type>", methods=["POST"])
-def focus_mode(focus_type: str):
-    ok = _controller.switch_to_focus(FocusType[focus_type.upper()])
-    return jsonify({"success": ok})
 
 @bp.route("/kids", methods=["POST"])
 def kids_mode():
     ok = _controller.switch_to_kids_mode()
     return jsonify({"success": ok})
 
+@bp.route("/focus/<focus_type>", methods=["POST"])
+def focus_mode(focus_type: str):
+    part = [part.strip() for part in focus_type.split("_") if part.strip()][0]
+    ok = _controller.switch_to_focus(FocusType[part.upper()])
+    return jsonify({"success": ok})
 # ------------------------------------------------------------------
 # Settings retrieval & update
 # ------------------------------------------------------------------
@@ -88,6 +89,10 @@ def update_setting(mode_key: str, setting: str):
 @bp.route("/modes", methods=["GET"])
 def list_modes():
     return jsonify(_controller.settings_manager.list_available_modes())
+
+@bp.route("/focus_modes", methods=["GET"])
+def list_foucs_modes():
+    return jsonify(_controller.settings_manager.list_available_Focus_modes())
 
 
 # ------------------------------------------------------------------

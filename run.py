@@ -15,8 +15,8 @@ if __name__ == '__main__':
     for rule in app.url_map.iter_rules():
         print(f"Route: {rule} → Endpoint: {rule.endpoint} : {rule.methods}")
 
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
     
     # Start activity monitoring in background thread
     # monitor_thread = threading.Thread(target=start_activity_monitoring, daemon=True)
