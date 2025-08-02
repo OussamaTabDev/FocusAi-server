@@ -2,11 +2,12 @@
 server/app/api/analytics_api.py
 REST endpoints for SessionAnalytics
 """
+from datetime import datetime
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "Core"))
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, abort, request, jsonify
 from  app.api.Activitiy.tracker_api import _tracker  
 from app.api.Activitiy import analytics_bp
 # Obtain analytics object from the already-running tracker
@@ -15,6 +16,23 @@ _analytics = _tracker.analytics
 # Define the blueprint for analytics API
 bp = analytics_bp
 
+def _stats_to_dict(stats_map):
+    """
+    Convert Dict[str, AppStatistics] -> JSON-serializable dict
+    """
+    return {
+        app: {
+            "app_name": st.app_name,
+            "total_time": st.total_time,
+            "session_count": st.session_count,
+            "average_session_duration": st.average_session_duration,
+            "longest_session": st.longest_session,
+            "last_used": st.last_used.isoformat() if st.last_used else None,
+            "contexts": st.contexts,
+            "statuses": st.statuses,
+        }
+        for app, st in stats_map.items()
+    }
 # ------------------------------------------------------------------
 # Routes
 # ------------------------------------------------------------------
@@ -29,10 +47,34 @@ def window_type_time():
     """GET /api/analytics/window-type-time"""
     return jsonify(_analytics.get_time_by_window_type())
 
-@bp.route("/top-windows-today", methods=["GET"])
+@bp.route("/today", methods=["GET"])
 def top_today_windows():
     """GET /api/analytics/window-type-time"""
     return jsonify(_analytics.get_today_statistics())
+
+@bp.route("/today", methods=["GET"])
+def get_today():
+    """
+    GET /api/analytics/today
+    Returns usage for the current calendar day (UTC).
+    """
+    stats = _analytics.get_today_statistics()
+    return jsonify(_stats_to_dict(stats)), 200
+
+
+@bp.route("/day/<string:day_str>", methods=["GET"])
+def get_day(day_str: str):
+    """
+    GET /api/analytics/day/2024-08-02
+    Accepts YYYY-mm-dd format.
+    """
+    try:
+        target_date = datetime.strptime(day_str, "%Y-%m-%d").date()
+    except ValueError:
+        abort(400, description="Date must be YYYY-mm-dd")
+
+    stats = _analytics.get_statistics_for_day(target_date)
+    return jsonify(_stats_to_dict(stats)), 200
 
 @bp.route("/top-windows", methods=["GET"])
 def top_windows():
