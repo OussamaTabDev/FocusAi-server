@@ -81,7 +81,14 @@ def top_windows():
     """GET /api/analytics/top-windows?n=5&hours=6"""
     n = request.args.get("n", default=5, type=int)
     hours = request.args.get("hours", type=int)
+    day = request.args.get("day", type=str, default=None)
+    if day:
+        try:
+            return jsonify(_analytics.get_top_windows(n, hours , day))
+        except ValueError:
+            abort(400, description="Day must be YYYY-mm-dd format")
     return jsonify(_analytics.get_top_windows(n, hours))
+            
 
 @bp.route("/top-raw-windows", methods=["GET"])
 def top_raw_windows():
@@ -101,6 +108,12 @@ def productive_apps():
     """GET /api/analytics/productive-apps?hours=6"""
     hours = request.args.get("hours", type=int)
     return jsonify(_analytics.get_productive_apps_ranking(hours))
+
+@bp.route("/neutral-apps", methods=["GET"])
+def neutral_apps():
+    """GET /api/analytics/neutral-apps?hours=6"""
+    hours = request.args.get("hours", type=int)
+    return jsonify(_analytics.get_neutral_apps_ranking(hours))
 
 @bp.route("/distracting-apps", methods=["GET"])
 def distracting_apps():
